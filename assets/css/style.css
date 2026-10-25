@@ -167,3 +167,5 @@ section { padding: 96px 0; }
 /* Keep hero media behind the text */
 .hero, .page-hero { isolation: isolate; }
 .page-hero::before { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, .55); z-index: -1; }
+.logo-img { height: 64px; width: auto; }
+@media (max-width: 960px) { .logo-img { height: 52px; } }

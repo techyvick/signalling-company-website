@@ -16,6 +16,11 @@ A static 8-page business website. Its layout and design follow a Hostinger Websi
 2. Edit the page text inside `build.py`.
 3. Run `python3 build.py` to regenerate the HTML.
 
+### Adding your own logo and photos
+- Save your logo as `assets/images/logo.png` (`.svg`, `.jpg` and `.webp` also work). It replaces the text logo in the header.
+- Put your photos in `assets/images/photos/`. They replace the stock photos in filename order, so name them `01.jpg`, `02.jpg` and so on to control where each one appears. About 25 photos fill every slot. If you add fewer, they repeat.
+- Run `python3 build.py` again.
+
 You can change colours and fonts in the `:root` block at the top of `assets/css/style.css`.
 
 The forms are demo-only. Connect them to a form service (Formspree, Netlify Forms, etc.) to receive messages.

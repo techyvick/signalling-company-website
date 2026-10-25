@@ -20,6 +20,8 @@ ANNOUNCE = "Announcement bar: share your latest project news or an important upd
 
 
 def u(photo_id, w=1200, h=None):
+    if not photo_id.startswith("photo-"):  # a local file from assets/images/photos
+        return photo_id
     """Free Unsplash stock photo URL."""
     size = f"&w={w}" + (f"&h={h}" if h else "")
     return f"https://images.unsplash.com/{photo_id}?auto=format&fit=crop&q=70{size}"
@@ -56,6 +58,19 @@ PHOTOS = [
     "photo-1611156231877-c5224cc7f45e",
 ]
 
+# Drop-in brand assets: put your own files here and rebuild.
+#   assets/images/logo.png (or .svg/.jpg/.webp)  -> replaces the text logo
+#   assets/images/photos/*.jpg|png|webp           -> replace the stock photos, in name order
+_IMG_EXT = (".jpg", ".jpeg", ".png", ".webp", ".svg")
+LOGO = next((f"assets/images/logo{e}" for e in _IMG_EXT if (ROOT / f"assets/images/logo{e}").exists()), None)
+_local = sorted(
+    f"assets/images/photos/{f.name}" for f in (ROOT / "assets/images/photos").glob("*")
+    if f.suffix.lower() in _IMG_EXT
+) if (ROOT / "assets/images/photos").is_dir() else []
+if _local:
+    # repeat if there are fewer files than photo slots
+    PHOTOS = (_local * (len(PHOTOS) // len(_local) + 1))[:max(len(PHOTOS), len(_local))]
+
 NAV = [
     ("index.html", "Home"),
     ("about.html", "About"),
@@ -88,6 +103,12 @@ def head(title, desc):
 """
 
 
+def logo_html():
+    if LOGO:
+        return f'<img class="logo-img" src="{LOGO}" alt="{BRAND}">'
+    return f'<span class="logo-mark">{SHORT}</span>\n      <span class="logo-text">{BRAND.upper()}</span>'
+
+
 def header(active):
     active_attr = ' class="active"'
     links = "\n".join(
@@ -104,8 +125,7 @@ def header(active):
       </ul>
     </nav>
     <a class="logo" href="index.html" aria-label="{BRAND} home">
-      <span class="logo-mark">{SHORT}</span>
-      <span class="logo-text">{BRAND.upper()}</span>
+      {logo_html()}
     </a>
     <a class="btn btn-primary nav-cta" href="contact-us.html">Get a consultation</a>
   </div>
